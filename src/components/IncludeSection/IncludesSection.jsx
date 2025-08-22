@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Plus, Trash2 } from "lucide-react"
 import TextInput from "./TextInput"
-import FileUpload from "./Fileupload"
+import FileUpload from "./FileUpload"
 import SidebarLayout from "../Sidebar"
 import ColorPicker from "../ColorPicker"
 import FontSelector from "../FontSelector"
