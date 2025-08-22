@@ -7,7 +7,7 @@ import Catagories from './components/Catagoeries';
 import AboutUs from './components/AboutUs';
 import Count from './components/Counting';
 import GallerySection from './components/GallerySection';
-import IncludesSection from './components/IncludeSection/IncluesSection';
+import IncludesSection from './components/IncludeSection/IncludesSection';
 import CallToAction from './components/CallAction';
 import Footer from './components/Footer';
 import TestimonialsSection from './components/Testimonials';
