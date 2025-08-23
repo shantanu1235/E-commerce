@@ -1,4 +1,4 @@
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://ecom-backend-4-bdss.onrender.com/api/auth'
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://ecom-backend-5-9wbn.onrender.com/api/auth'
 
 
 // General function to get full API endpoint
