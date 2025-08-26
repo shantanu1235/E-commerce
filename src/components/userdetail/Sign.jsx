@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getApiEndpoint } from "../APIConnect";
 
 const Sign = () => {
   const [name, setName] = useState("");
@@ -8,29 +9,57 @@ const Sign = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [message, setMessage] = useState(null); // <-- new state
+  const [messageType, setMessageType] = useState("success"); // success or error
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setMessage("Passwords do not match!");
+      setMessageType("error");
       return;
     }
-    // Yahan aap API call karen, success par:
-    // Example:
-    // await fetch(...);
-    // if (success) {
-    navigate("/login");
-    // }
+    try {
+      const res = await fetch(getApiEndpoint('register'), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, confirmPassword }),
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMessage("Signup successful! Redirecting to login...");
+        setMessageType("success");
+        setTimeout(() => navigate("/login"), 1500);
+      } else {
+        setMessage(data.message || "Signup failed!");
+        setMessageType("error");
+      }
+    } catch (err) {
+      setMessage("Server error!");
+      setMessageType("error");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#00FFF0] from-yellow-200 via-orange-200 to-pink-200">
-      <div className="bg-white rounded-2xl shadow-3xl px-10 py-3 w-screen max-w-md">
-        <h2 className="text-3xl font-bold text-orange-500 mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="bg-white rounded-2xl shadow-xl border px-10 py-3 w-screen max-w-md">
+        <h2 className="text-3xl font-bold text-blue-600 mb-2">
           Create Account
         </h2>
         <p className="text-gray-500 mb-6">Sign up for your E-Shop account</p>
+        {message && (
+          <div
+            className={`mb-4 px-4 py-2 rounded ${
+              messageType === "success"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            {message}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div>
             <label className="block font-semibold text-gray-700 mb-1">
@@ -38,7 +67,7 @@ const Sign = () => {
             </label>
             <input
               type="text"
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-300 bg-gray-50"
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black-300 bg-gray-50"
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -51,7 +80,7 @@ const Sign = () => {
             </label>
             <input
               type="email"
-              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-300 bg-gray-50"
+              className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black bg-gray-50"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -65,7 +94,7 @@ const Sign = () => {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-300 bg-gray-50"
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black-300 bg-gray-50"
                 placeholder="Create a password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -73,7 +102,7 @@ const Sign = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-2 text-orange-500 font-semibold text-sm focus:outline-none"
+                className="absolute right-3 top-2 text-black-500 font-semibold text-sm focus:outline-none"
                 onClick={() => setShowPassword((prev) => !prev)}
                 tabIndex={-1}
               >
@@ -88,7 +117,7 @@ const Sign = () => {
             <div className="relative">
               <input
                 type={showConfirm ? "text" : "password"}
-                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-300 bg-gray-50"
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black-300 bg-gray-50"
                 placeholder="Confirm your password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -96,7 +125,7 @@ const Sign = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-2 text-orange-500 font-semibold text-sm focus:outline-none"
+                className="absolute right-3 top-2 text-black-500 font-semibold text-sm focus:outline-none"
                 onClick={() => setShowConfirm((prev) => !prev)}
                 tabIndex={-1}
               >
@@ -106,14 +135,14 @@ const Sign = () => {
           </div>
           <button
             type="submit"
-            className="bg-gradient-to-r from-orange-400 to-pink-400 text-white font-bold py-2 rounded-lg shadow-md hover:from-orange-500 hover:to-pink-500 transition"
+            className="bg-blue-700 text-white font-bold py-2 rounded-l hover:to-blue-300 transition"
           >
             Sign Up
           </button>
           <div className="mt-3 flex justify-center text-sm text-gray-500">
             <a
               href="#"
-              className="text-orange-500 font-semibold hover:underline"
+              className="text-blue-700 font-semibold hover:underline"
               onClick={(e) => {
                 e.preventDefault();
                 navigate("/login");

@@ -2,17 +2,23 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getApiEndpoint } from "../APIConnect";
 
+const HEADER_ID = "PUT_YOUR_HEADER_ID_HERE"; // yahan apni header settings ki id daalein
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [headerData, setHeaderData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(getApiEndpoint('header1'))
+    // Pehle header settings ka document fetch karo
+    fetch(getApiEndpoint('header1')) // yahan GET /header1 se pehla document milega
       .then((res) => res.json())
       .then((data) => {
         console.log("Header API Response:", data);
-        if (data.success && data.data) setHeaderData(data.data);
+        if (data.success && data.data) {
+          setHeaderData(data.data);
+          // Agar aapko id chahiye to: setHeaderId(data.data._id);
+        }
       });
   }, []);
 
